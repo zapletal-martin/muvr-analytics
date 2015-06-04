@@ -11,9 +11,7 @@ import sbtassembly.PathList
  */
 object BaseSettings extends sbtassembly.AssemblyKeys {
   import sbtassembly.MergeStrategy
-  import sbtdocker._
   import net.virtualvoid.sbt.graph.Plugin._
-  import sbtdocker.Plugin.DockerKeys._
 
   /**
    * Common project settings
@@ -21,7 +19,7 @@ object BaseSettings extends sbtassembly.AssemblyKeys {
   val baseSettings: Seq[Def.Setting[_]] =
     graphSettings ++ 
     Seq(
-      organization := "com.eigengo.lift",
+      organization := "io.muvr",
       scalaVersion := "2.10.5",
       version := "1.0.0-SNAPSHOT",
       scalacOptions in Compile ++= Seq("-encoding", "UTF-8", "-target:jvm-1.7", "-deprecation", "-unchecked", "-Ywarn-dead-code", "-feature"),
@@ -37,6 +35,10 @@ object BaseSettings extends sbtassembly.AssemblyKeys {
       fork in test := true,
       sbtPlugin := false,
       resolvers := ResolverSettings.resolvers,
+      assemblyExcludedJars in assembly := { 
+        val cp = (fullClasspath in assembly).value
+        cp filter {_.data.getName == "scala-library.jar"}
+      },
       assemblyMergeStrategy in assembly := {
         case "application.conf"                                                  => MergeStrategy.concat
         case "package-info.class"                                                => MergeStrategy.concat
