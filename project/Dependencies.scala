@@ -85,4 +85,7 @@ object Dependencies {
   val cassandra_driver = "com.datastax.cassandra" % "cassandra-driver-core" % "2.1.5" exclude("io.netty", "netty")
   val guava = "com.google.guava" % "guava" % "18.0"
 
+  val breeze = "org.scalanlp" %% "breeze" % "0.11.2"
+  val breeze_natives = "org.scalanlp" %% "breeze-natives" % "0.11.2"
+  val jmotif = "edu.hawaii" % "jmotif" % "0.0.1-SNAPSHOT"
 }
