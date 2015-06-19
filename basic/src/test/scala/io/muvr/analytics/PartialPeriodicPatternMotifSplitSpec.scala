@@ -37,7 +37,7 @@ class PartialPeriodicPatternMotifSplitSpec extends FlatSpec with MustMatchers {
     val result = PartialPeriodicPatternMotifSplit.split(
       sequence.toSeq.map(_.toSeq), Distance.Euclidean(_, _),
       950,
-      150,
+      100,
       10,
       10)
 
