@@ -30,6 +30,6 @@ object LabellingMain extends App {
     //transposed.foreach(x => println(x.mkString(",")))
 
     import Distance.doubleDistance
-    ExerciseLabelling.label[Double](transposed.toSeq.map(_.toSeq.map(_.toDouble)), "Bicep", PartialPeriodicPatternMotifSplit.split(_, Distance.Euclidean(_, _)))
+    ExerciseLabelling.label[Double](transposed.toSeq.map(_.toSeq.map(_.toDouble)), "Bicep", PartialPeriodicPatternMotifSplit.split(_, Distance.Euclidean(_, _), 100, 10))
   }
 }

@@ -2,26 +2,56 @@ package io.muvr.analytics.labelling
 
 import io.muvr.analytics.labelling.Distance.TimeSeriesDistance
 import io.muvr.analytics.labelling.SubSequence.{SubSequence, TimeSeries}
-import io.muvr.analytics.labelling.jmotif.RightWindowAlgorithm
+import io.muvr.analytics.labelling.jmotif.{LargeWindowAlgorithm, SAXFactory}
 
 object JMotif {
-  def series2Mofifs(input: TimeSeries[Double]): Seq[Int] = {
-    val motifs = io.muvr.analytics.labelling.jmotif.SAXFactory.series2Motifs(input.toArray, 10, 6, 10, new RightWindowAlgorithm)
-    motifs.getTopHits(10).get(0).getPositions
+  def series2Mofifs(input: TimeSeries[Double], window: Int): Seq[Int] = {
+    val motifs = SAXFactory
+      .series2Motifs(input.toArray, window, 9, 1, new LargeWindowAlgorithm)
+      .getTopHits(10)
+
+    for(i <- 0 to motifs.size() - 1) {
+      println(s"MOTIF: $i")
+      println(s"POSITIONS: ${motifs.get(i).getPositions.mkString(",")}")
+      println(s"PAYLOAD: ${motifs.get(i).getPayload}")
+    }
+
+    motifs.get(0).getPositions
   }
 }
 
 object PartialPeriodicPatternMotifSplit {
-  def split(input: Seq[TimeSeries[Double]], timeSeriesDistance: TimeSeriesDistance[Double]): Seq[SubSequence[Double]] = {
-    //assert(1 == 1)
+  def split(
+      input: Seq[TimeSeries[Double]],
+      timeSeriesDistance: TimeSeriesDistance[Double],
+      threshold: Double,
+      window: Int,
+      windowSizeStep: Int = 10,
+      windowMoveStep: Int = 30): Seq[SubSequence[Double]] = {
 
-    val subSequenceLength = 100
-    val treshold = 15
+    var clusters: Seq[Seq[Seq[Double]]]= Seq()
 
-    val motifs = JMotif.series2Mofifs(input(0))
+    for(ts <- 0 to input.size - 1) {
+      var tsclusters: Seq[Seq[Double]] = Seq()
 
-    println(motifs)
+      for (i <- 0 to input(ts).length - window by windowMoveStep) {
+        for (j <- i + 1 to input(ts).length - window by windowMoveStep) {
+          val first = input(ts).slice(i, i + window)
+          val second = input(ts).slice(j, j + window)
 
-    Seq(SubSequence.SubSequence(Seq(Seq())))
+          if (timeSeriesDistance(first, second) < threshold) {
+            tsclusters = tsclusters :+ first :+ second
+          }
+        }
+      }
+
+      clusters = clusters :+ tsclusters
+    }
+
+    clusters.map(SubSequence.SubSequence(_))
+
+    /*val motifs = JMotif.series2Mofifs(input(0), window)
+
+    Seq(SubSequence.SubSequence(Seq(Seq())))*/
   }
 }

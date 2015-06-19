@@ -17,5 +17,6 @@ libraryDependencies ++= Seq(
   akka.chill % "runtime",
   guava % "runtime",
   breeze % "runtime",
-  breeze_natives % "runtime"
+  breeze_natives % "runtime",
+  scalaTest % "test"
 )
