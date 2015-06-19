@@ -36,8 +36,8 @@ class PartialPeriodicPatternMotifSplitSpec extends FlatSpec with MustMatchers {
     import Distance.doubleDistance
     val result = PartialPeriodicPatternMotifSplit.split(
       sequence.toSeq.map(_.toSeq), Distance.Euclidean(_, _),
-      1300,
-      100,
+      950,
+      150,
       10,
       10)
 

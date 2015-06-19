@@ -30,12 +30,13 @@ object PartialPeriodicPatternMotifSplit {
       windowMoveStep: Int = 30): Seq[SubSequence[Double]] = {
 
     var clusters: Seq[Seq[Seq[Double]]]= Seq()
+    var best: Map[Int, (Double, Int)] = Map()
 
     for(ts <- 0 to input.size - 1) {
       var tsclusters: Seq[Seq[Double]] = Seq()
 
       for (i <- 0 to input(ts).length - window by windowMoveStep) {
-        for (j <- i + 1 to input(ts).length - window by windowMoveStep) {
+        for (j <- i + windowMoveStep to input(ts).length - window by windowMoveStep) {
           val first = input(ts).slice(i, i + window)
           val second = input(ts).slice(j, j + window)
 
@@ -47,6 +48,9 @@ object PartialPeriodicPatternMotifSplit {
 
       clusters = clusters :+ tsclusters
     }
+
+    println("CLUSTERS")
+    println(clusters.map(_.mkString(",")).mkString("\r\n"))
 
     clusters.map(SubSequence.SubSequence(_))
 
