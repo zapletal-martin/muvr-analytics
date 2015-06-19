@@ -2,9 +2,8 @@ package io.muvr.analytics.labelling
 
 import io.muvr.analytics.labelling.Distance.TimeSeriesDistance
 import io.muvr.analytics.labelling.SubSequence.{SubSequence, TimeSeries}
-import io.muvr.analytics.labelling.jmotif.{LargeWindowAlgorithm, SAXFactory}
 
-object JMotif {
+/*object JMotif {
   def series2Mofifs(input: TimeSeries[Double], window: Int): Seq[Int] = {
     val motifs = SAXFactory
       .series2Motifs(input.toArray, window, 9, 1, new LargeWindowAlgorithm)
@@ -18,7 +17,7 @@ object JMotif {
 
     motifs.get(0).getPositions
   }
-}
+}*/
 
 object PartialPeriodicPatternMotifSplit {
   def split(
@@ -55,7 +54,6 @@ object PartialPeriodicPatternMotifSplit {
     clusters.map(SubSequence.SubSequence(_))
 
     /*val motifs = JMotif.series2Mofifs(input(0), window)
-
     Seq(SubSequence.SubSequence(Seq(Seq())))*/
   }
 }
