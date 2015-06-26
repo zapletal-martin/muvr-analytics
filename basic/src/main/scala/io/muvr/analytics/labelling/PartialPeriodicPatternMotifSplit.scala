@@ -34,7 +34,7 @@ object PartialPeriodicPatternMotifSplit {
 
     // The algorithm often identifies the same cluster mutliple times.
     // E.g. 100 and 500, 110 and 510 etc. We want to skip those.
-    val skip = windowMoveStep * 3
+    val skip = 30
 
     for(ts <- 0 to input.size - 1) {
       var tsClusters: Seq[Cluster] = Seq()
@@ -50,18 +50,18 @@ object PartialPeriodicPatternMotifSplit {
 
           val lastCluster = if(cluster.clusterStarts.isEmpty) 0 else cluster.clusterStarts.last
 
-          if (distance < threshold && lastCluster + skip <= j) {
+          if (distance < threshold && lastCluster + skip <= j && i + skip <= j) {
             cluster = cluster.copy(clusterStarts = cluster.clusterStarts :+ j, cummulativeDistance = cluster.cummulativeDistance + distance)
           }
         }
 
-        if(cluster.clusterStarts.nonEmpty) tsClusters = tsClusters :+ cluster
+        tsClusters = tsClusters :+ cluster
       }
 
       clusters = clusters :+ tsClusters
     }
 
-    println("CLUSTERS")
+    /*println("CLUSTERS")
     clusters.foreach{ ts =>
       println("TS")
 
@@ -73,21 +73,32 @@ object PartialPeriodicPatternMotifSplit {
     println()
     println()
     println()
-    println("TOPS")
-    val topClusters = clusters.map(_.maxBy(_.clusterStarts.size))
-    topClusters.foreach{ ts =>
-      println("TS")
-      println(s"CLUSTER ${ts.windowStart} SIMILAR ${ts.clusterStarts.mkString(",")} WITH CUMMULATIVE DISTANCE ${ts.cummulativeDistance}")
+    println("TOPS")*/
+
+    val longest = clusters.map(_.map(_.clusterStarts.size).max)
+
+    val topClusters = clusters.zip(longest).map(cs => cs._1.filter(_.clusterStarts.size == cs._2).sortBy(_.cummulativeDistance).head)
+
+    for(i <- 0 to topClusters.size - 1) {
+      println(s"TS $i")
+      println(s"CLUSTER ${topClusters(i).windowStart} SIMILAR ${topClusters(i).clusterStarts.mkString(",")} WITH CUMMULATIVE DISTANCE ${topClusters(i).cummulativeDistance}")
+      println(topClusters(i).windowStart)
+      println(input(i).slice(topClusters(i).windowStart, topClusters(i).windowStart + topClusters(i).windowSize).mkString(","))
+      topClusters(i).clusterStarts.foreach{ c =>
+        println(c)
+        println(input(i).slice(c, c + topClusters(i).windowSize).mkString(","))
+      }
     }
 
     //TODO: Not just first.
     val numbers = topClusters(0).clusterStarts.map{ start =>
       SubSequence.SubSequence(Seq(input(0).slice(start, start + topClusters(0).windowSize)))
     }
-
+/*
     println("--------------------------------------")
+    println(input(0).size)
     println(input(0).mkString(","))
-    println("--------------------------------------")
+    println("--------------------------------------")*/
 
     /*println("SUBSEQUENCES 0")
     numbers.foreach{ subseq =>
