@@ -15,5 +15,8 @@ libraryDependencies ++= Seq(
   spray.client,
   akka.persistence % "runtime",
   akka.chill % "runtime",
-  guava % "runtime"
+  guava % "runtime",
+  breeze % "runtime",
+  breeze_natives % "runtime",
+  scalaTest % "test"
 )
