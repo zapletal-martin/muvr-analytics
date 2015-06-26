@@ -13,7 +13,7 @@ object ExerciseLabelling extends {
    * @param split Abstracted function that extracts features (single repetitions) from the whole set.
    * @return Labeled data.
    */
-  def label[T](fusedSensorData: Seq[TimeSeries[T]], label: String, split: PartialSplit[T]): Seq[LabeledSubSequence[T]] = {
+  def label[T](fusedSensorData: Seq[TimeSeries[T]], label: String, split: Split[T]): Seq[LabeledSubSequence[T]] = {
     val splits = split(fusedSensorData)
 
     Seq(LabeledSubSequence(label, SubSequence.SubSequence(Seq(Seq()))))

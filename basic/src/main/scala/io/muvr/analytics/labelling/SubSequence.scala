@@ -21,9 +21,8 @@ object SubSequence {
    * to subsequences where each subsequence contains exactly one repetition of given exercise.
    * Padding before and after the periodic movement is discarded.
    */
-  type Split[T] = (Seq[TimeSeries[T]], TimeSeriesDistance[T]) => Seq[SubSequence[T]]
-
-  type PartialSplit[T] = Seq[TimeSeries[T]] => Seq[SubSequence[T]]
+  type Split[T] = Seq[TimeSeries[T]] => Seq[SubSequence[T]]
+  //type Split[T] = (Seq[TimeSeries[T]], TimeSeriesDistance[T]) => Seq[SubSequence[T]]
 
   case class SubSequence[T](data: Seq[Seq[T]])
 

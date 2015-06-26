@@ -1,7 +1,7 @@
 package io.muvr.analytics.labelling
 
 import io.muvr.analytics.labelling.Distance.TimeSeriesDistance
-import io.muvr.analytics.labelling.SubSequence.{SubSequence, TimeSeries}
+import io.muvr.analytics.labelling.SubSequence.{Split, SubSequence, TimeSeries}
 
 /*object JMotif {
   def series2Mofifs(input: TimeSeries[Double], window: Int): Seq[Int] = {
@@ -21,14 +21,22 @@ import io.muvr.analytics.labelling.SubSequence.{SubSequence, TimeSeries}
 
 object PartialPeriodicPatternMotifSplit {
   case class Cluster(windowStart: Int, windowSize: Int, clusterStarts: Seq[Int], cummulativeDistance: Double)
-  
+
+  def split(
+      timeSeriesDistance: TimeSeriesDistance[Double],
+      threshold: Double,
+      window: Int,
+      windowSizeStep: Int = 10,
+      windowMoveStep: Int = 30): Split[Double] =
+    split(_,  timeSeriesDistance, threshold, window, windowSizeStep, windowMoveStep)
+
   def split(
       input: Seq[TimeSeries[Double]],
       timeSeriesDistance: TimeSeriesDistance[Double],
       threshold: Double,
       window: Int,
-      windowSizeStep: Int = 10,
-      windowMoveStep: Int = 30): Seq[SubSequence[Double]] = {
+      windowSizeStep: Int,
+      windowMoveStep: Int): Seq[SubSequence[Double]] = {
 
     var clusters: Seq[Seq[Cluster]]= Seq()
 
